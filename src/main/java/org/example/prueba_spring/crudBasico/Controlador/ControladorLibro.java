@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import org.example.prueba_spring.crudBasico.Modelo.Libro;
 import org.example.prueba_spring.crudBasico.Servicio.LibroServicio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/libros")
+@CacheConfig(cacheNames = {"libros"})
 public class ControladorLibro {
     @Autowired
     private LibroServicio servicio;
@@ -24,9 +27,15 @@ public class ControladorLibro {
     }
 
     @GetMapping("/{isbn}")
+    @Cacheable
     public ResponseEntity<Libro> getLibroById(@PathVariable(name = "isbn") String isbn) {
-        Libro libro = servicio.obtenerUno(isbn);
-        return new ResponseEntity<>(libro,HttpStatus.OK);
+        try{
+            Thread.sleep(3000);
+            Libro libro = servicio.obtenerUno(isbn);
+            return new ResponseEntity<>(libro,HttpStatus.OK);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PostMapping

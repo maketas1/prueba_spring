@@ -1,10 +1,9 @@
 package org.example.prueba_spring.crudBasico.Modelo;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
@@ -19,19 +18,15 @@ public class Prestamo {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private org.example.prueba_spring.crudBasico.Modelo.Usuario usuario;
+    @NotNull(message = "El campo usuario no puede ser null")
+    @Column(name = "usuario_id", nullable = false)
+    private Integer usuario_id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "ejemplar_id", nullable = false)
-    private Ejemplar ejemplar;
+    @NotNull(message = "El campo ejemplar no puede ser null")
+    @Column(name = "ejemplar_id", nullable = false)
+    private Integer ejemplar_id;
 
-    @NotNull
+    @NotNull(message = "El campo fechaInicio no puede ser null")
     @Column(name = "fecha_inicio", nullable = false)
     private LocalDate fechaInicio;
 
